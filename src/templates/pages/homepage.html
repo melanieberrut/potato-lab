@@ -1,0 +1,20 @@
+<!-- index.nunjucks -->
+{% extends "./layouts/layout1.html" %}
+
+{% block content %}
+<div class="[ o-wrapper ]">
+
+	<h1>Welcome to the homepage</h1>
+
+	<div class="[ gallery ]">
+		<!-- Loops through "images" array -->
+		{% for image in images %}
+		<div class="[ gallery__item ]">
+			<img src="{{image.src}}" alt="{{image.alt}}">
+		</div>
+		{% endfor %}
+	</div>
+
+
+</div>
+{% endblock %}

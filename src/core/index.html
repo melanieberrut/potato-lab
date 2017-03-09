@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="/core/assets/core.css">
+	<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+	<div class="[ core-header ]">
+			<img class="[ core-header__logo ]" src="./core/assets/logo.png" alt="">
+			<h1 class="[ core-header__heading ]" >Welcome to potatoLab</h1>
+	</div>
+
+	<nav>
+		<ul>
+			<li><h2>Pages</h2></li>
+			{% for page in pages %}
+			<li>
+				<a href="{{ page.path }}">{{ page.name }}</a>
+			</li>
+			{% endfor %}
+		</ul>
+		<ul>
+			<li><h2>Templates</h2></li>
+			{% for template in templates %}
+			<li>
+				<a href="{{ template.path }}">{{ template.name }}</a>
+			</li>
+			{% endfor %}
+		</ul>
+		<ul>
+			<li><h2>Macros</h2></li>
+			{% for macro in macros %}
+			<li>
+				<a href="{{ macro.path }}">{{ macro.name }}</a>
+			</li>
+			{% endfor %}
+		</ul>
+		<ul>
+			<li><h2>Partials</h2></li>
+			{% for partial in partials %}
+			<li>
+				<a href="{{ partial.path }}">{{ partial.name }}</a>
+			</li>
+			{% endfor %}
+		</ul>
+	</nav>
+
+</body>
+</html>
