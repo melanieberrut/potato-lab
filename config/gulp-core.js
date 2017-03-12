@@ -10,6 +10,8 @@ var gulp = require("gulp"),
 	data = require("gulp-data"),
 	glob = require("glob"),
 	sass = require("gulp-sass"),
+	autoprefixer = require('gulp-autoprefixer'),
+	sourcemaps = require('gulp-sourcemaps'),
 	gutil = require("gulp-util"),
 	browserSync = require("browser-sync").create();
 
@@ -24,6 +26,33 @@ gulp.task("images", function() {
 		}))
 		// output them in the build folder
 		.pipe(gulp.dest( build.images ));
+});
+
+
+gulp.task("styles", function() {
+	// Locate the source SASS files
+	gulp.src( src.styles )
+		// Init sourcemaps
+		.pipe(sourcemaps.init())
+		// trap any errors on sass compile
+		.pipe(sass().on("error", sass.logError))
+		// Apply vendors prefix
+		.pipe(autoprefixer({
+            browsers: ['last 5 versions'],
+            cascade: false
+        }))
+        // Generate sourcemaps
+        .pipe(sourcemaps.write())
+		// compile to CSS in location
+		.pipe(gulp.dest( build.styles ));
+});
+
+
+gulp.task("scripts", function() {
+	// Locate the source JS files
+	gulp.src( src.scripts )
+		// Moe to build
+		.pipe(gulp.dest( build.scripts ))
 });
 
 
@@ -94,6 +123,6 @@ gulp.task("browser-sync", function() {
 });
 
 
-gulp.task("default", ["images", "nunjucks", "core","browser-sync"]);
+gulp.task("default", ["images", "nunjucks", "core", "scripts", "styles", "browser-sync"]);
 
 module.exports = gulp;

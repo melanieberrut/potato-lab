@@ -2,6 +2,8 @@ module.exports = {
 	paths: {
 		src: {
 			images: "./src/images/**/*",
+			styles: "./src/styles/**/*.scss",
+			scripts: "./src/js/**/*.js",
 			template: {
 				files: "./src/**/*.html",
 				path: "src/templates"
@@ -22,6 +24,8 @@ module.exports = {
 		},
 		build: {
 			images: "./build/images/",
+			styles: "./build/styles/",
+			scripts: "./build/js",
 			template: "./build",
 			core: {
 				path: "./build",
