@@ -13,6 +13,7 @@ var gulp = require("gulp"),
 	autoprefixer = require('gulp-autoprefixer'),
 	sourcemaps = require('gulp-sourcemaps'),
 	gutil = require("gulp-util"),
+	eslint = require("gulp-eslint"),
 	browserSync = require("browser-sync").create();
 
 
@@ -22,10 +23,11 @@ gulp.task("images", function() {
 	gulp.src( src.images )
 		// minifies the images from the given path
 		.pipe(imagemin({
-			verbose: true
+			// verbose: true
 		}))
 		// output them in the build folder
-		.pipe(gulp.dest( build.images ));
+		.pipe(gulp.dest( build.images ))
+		.pipe(browserSync.stream());
 });
 
 
@@ -44,7 +46,8 @@ gulp.task("styles", function() {
         // Generate sourcemaps
         .pipe(sourcemaps.write())
 		// compile to CSS in location
-		.pipe(gulp.dest( build.styles ));
+		.pipe(gulp.dest( build.styles ))
+		.pipe(browserSync.stream());
 });
 
 
@@ -53,6 +56,7 @@ gulp.task("scripts", function() {
 	gulp.src( src.scripts )
 		// Moe to build
 		.pipe(gulp.dest( build.scripts ))
+		.pipe(browserSync.stream());
 });
 
 
@@ -100,17 +104,17 @@ gulp.task("core", function() {
 gulp.task("nunjucks", function() {
 	// Gets .html files in pages
 	return gulp.src( src.template.files )
-	// Adding data to Nunjucks
-	.pipe(data(function() {
-		return JSON.parse(fs.readFileSync( src.data ));
-	}))
-	// Renders template with nunjucks
-	.pipe(nunjucksRender({
-		path: [ src.template.path ]
-	}))
-	// output files in src folder
-	.pipe(gulp.dest( build.template ));
-	// .pipe(browserSync.stream());
+		// Adding data to Nunjucks
+		.pipe(data(function() {
+			return JSON.parse(fs.readFileSync( src.data ));
+		}))
+		// Renders template with nunjucks
+		.pipe(nunjucksRender({
+			path: [ src.template.path ]
+		}))
+		// output files in src folder
+		.pipe(gulp.dest( build.template ))
+		.pipe(browserSync.stream());
 });
 
 gulp.task("browser-sync", function() {
@@ -118,11 +122,38 @@ gulp.task("browser-sync", function() {
 		// Create a static server
 		server: "./",
 		// Serve the specific folders:
-		serveStatic: ["./build", "./docs"]
+		serveStatic: ["./build", "./docs"],
+		// Don't show any notifications in the browser.
+		notify: false
 	});
+	gulp.watch([src.styles], ['styles']);
+	gulp.watch([src.template.files], ['nunjucks']);
 });
 
 
-gulp.task("default", ["images", "nunjucks", "core", "scripts", "styles", "browser-sync"]);
+gulp.task("lint", function() {
+	// ESLint ignores files with "node_modules" paths.
+	// So, it"s best to have gulp ignore the directory as well.
+	// Also, Be sure to return the stream from the task;
+	// Otherwise, the task may end before the stream has finished.
+	return gulp.src(["**/*.js","!node_modules/**", "!**/node_modules/**", "!./sass/**/*.js"])
+		// eslint() attaches the lint output to the "eslint" property
+		// of the file object so it can be used by other modules.
+		.pipe(eslint({
+			"rules":{
+				"camelcase": 1,
+				"comma-dangle": 2,
+				"quotes": 0
+			}
+		}))
+		// eslint.format() outputs the lint results to the console.
+		// Alternatively use eslint.formatEach() (see Docs).
+		.pipe(eslint.format())
+		// To have the process exit with an error code (1) on
+		// lint error, return the stream and pipe to failAfterError last.
+		.pipe(eslint.failAfterError());
+});
+
+gulp.task("default", ["images", "nunjucks", "core", "lint", "scripts", "styles", "browser-sync"]);
 
 module.exports = gulp;
