@@ -4,6 +4,7 @@ module.exports = {
 			images: "./src/images/**/*",
 			styles: "./src/styles/**/*.scss",
 			scripts: "./src/js/**/*.js",
+			hologram: "./config/hologram_config.yml",
 			template: {
 				files: "./src/**/*.html",
 				path: "src/templates"

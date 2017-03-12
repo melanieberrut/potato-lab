@@ -8,8 +8,10 @@ var gulp = require("gulp"),
 	nunjucks = require("nunjucks"),
 	fs = require("fs"),
 	data = require("gulp-data"),
+	hologram = require("gulp-hologram"),
 	glob = require("glob"),
 	sass = require("gulp-sass"),
+	sassdoc = require("sassdoc"),
 	autoprefixer = require('gulp-autoprefixer'),
 	sourcemaps = require('gulp-sourcemaps'),
 	gutil = require("gulp-util"),
@@ -126,7 +128,7 @@ gulp.task("browser-sync", function() {
 		// Don't show any notifications in the browser.
 		notify: false
 	});
-	gulp.watch([src.styles], ['styles']);
+	gulp.watch([src.styles], ['styles','sassdoc']);
 	gulp.watch([src.template.files], ['nunjucks']);
 });
 
@@ -136,7 +138,7 @@ gulp.task("lint", function() {
 	// So, it"s best to have gulp ignore the directory as well.
 	// Also, Be sure to return the stream from the task;
 	// Otherwise, the task may end before the stream has finished.
-	return gulp.src(["**/*.js","!node_modules/**", "!**/node_modules/**", "!./sass/**/*.js"])
+	return gulp.src(["./src/**/*.js","!node_modules/**", "!**/vendor/**"])
 		// eslint() attaches the lint output to the "eslint" property
 		// of the file object so it can be used by other modules.
 		.pipe(eslint({
@@ -154,6 +156,32 @@ gulp.task("lint", function() {
 		.pipe(eslint.failAfterError());
 });
 
-gulp.task("default", ["images", "nunjucks", "core", "lint", "scripts", "styles", "browser-sync"]);
+gulp.task("hologram", function() {
+	// Locate the config file for hologram
+	gulp.src( src.hologram )
+		// generate hologram
+		.pipe(hologram()); // options : {logging:true}
+});
+
+gulp.task("sassdoc", function () {
+	// Options
+	var options = {
+		dest: "docs/sass",
+		verbose: false,
+		display: {
+			access: ["public", "private"],
+			alias: false,
+			watermark: false
+		}
+	};
+	gulp.src( src.styles )
+		.pipe(sassdoc(options));
+
+	// TO DO: Get the SASSDOC page to reload on SASS changes
+});
+
+// GLOBAL TASKS
+gulp.task("default", ["images", "nunjucks", "core", "lint", "scripts", "styles", "sassdoc", "hologram"]);
+gulp.task("dev", ["default", "browser-sync"]);
 
 module.exports = gulp;

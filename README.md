@@ -18,3 +18,7 @@
 
 ## Javascript
  * Blank, can be setup to be whatever you want. At the moment, the task copy the file from src to build
+
+## Documentation
+ * [Hologram](https://github.com/trulia/hologram) parses comments in your CSS and helps you turn them into a beautiful style guide
+ * [SASSDocs](http://sassdoc.com) a documentation system to build pretty and powerful docs in the blink of an eye

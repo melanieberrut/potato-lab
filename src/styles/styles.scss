@@ -4,6 +4,10 @@
 
 @import "./node_modules/inuitcss/example.main";
 
+/// Here is the description
+/// @group colours
+$header-default-bg: #000;
+
 body {
 	background-color: #ccc;
 }

@@ -1,3 +1,17 @@
+/*doc
+---
+title: Alert
+name: alert
+category: basics
+---
+```html_example
+    <div class='c-alert'>Alert</div>
+```
+*/
 .c-alert {
 	// Component details
 }
+
+
+/// @group colours
+$alert-default-colour: red;
