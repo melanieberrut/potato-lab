@@ -2,7 +2,11 @@
 
 // Our custom CSS to be here
 
-@import "./node_modules/inuitcss/example.main";
+@import "./global/_global.variables.scss";
+
+@import "./components/_components.alerts.scss";
+
+
 
 /// Here is the description
 /// @group colours

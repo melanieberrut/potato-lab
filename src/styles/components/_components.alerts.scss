@@ -10,8 +10,6 @@ category: basics
 */
 .c-alert {
 	// Component details
+	background: $alert-default-colour;
+	color: white;
 }
-
-
-/// @group colours
-$alert-default-colour: red;
